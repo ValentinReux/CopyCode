@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Clipboard, ClipboardCheck, Code, Settings, Moon, Sun, AlertCircle, Info } from 'lucide-react';
 import './App.css';
+import CodeEditor from '@uiw/react-textarea-code-editor';
+import clippy from './assets/1280x1024-clippy.gif'
 
 const App = () => {
   const [code, setCode] = useState('');
@@ -13,6 +15,11 @@ const App = () => {
   });
   const [showSettings, setShowSettings] = useState(false);
   const [commentLevel, setCommentLevel] = useState('standard');
+  const [promptType, setpromptType] = useState('Code');
+  const [codeDebug, setcodeDebug] = useState(false);
+  const [codeOptmize, setcodeOptmize] = useState(false);
+  const [codeExplanation, setcodeExplanation] = useState(false);
+  
   const [preserveStructure, setPreserveStructure] = useState(false);
   const [notification, setNotification] = useState({ show: false, message: '', type: 'success' });
   const [apiKey, setApiKey] = useState(() => {
@@ -101,24 +108,82 @@ const App = () => {
     setIsProcessing(true);
     
     try {
-      // Build the prompt based on settings
+
       let promptText = `I have the following ${detectedLanguage || 'code'} that I'd like you to improve:\n\n\`\`\`\n${code}\n\`\`\`\n\n`;
+
+      if (promptType === 'Code') {
+        promptText += "Rigorously analyze the provided code\n\n ";
+
+
+        if (codeOptmize) {
+          promptText += " Structure the code according to best practices.\n Respect specified constraints (performance, resource usage).\n";
+        } 
+
+        if (codeDebug) {
+          promptText += " Identify all potential bugs and issues.\n Propose a corrected version of the code\n";
+        }
+
+        if (codeExplanation){
+          promptText += "Add at the end, in comments, a dedicated section summarizing identified problems and solutions provided\n";
+
+          if (!codeOptmize && codeDebug) {
+            promptText += "title the section 'BUGS FOUND AND FIXES MADE'\n";
+          }
+
+          else if (!codeDebug && codeOptmize){
+            promptText += "title the section 'UNOPTIMIZED CODE FOUND AND FIXES MADE'\n";
+          }
+
+          else if (codeDebug && codeOptmize){
+            promptText += "title the section 'BUGS AND UNOPTIMIZED CODE FOUND AND FIXES MADE'\n";
+          }
+
+        } 
+
+        if (preserveStructure) {
+          promptText += "Optimize this code WITHOUT changing its structure or functionality. \n";
+        } else {
+          promptText += `Please optimize this code. You can improve variable names, code structure and organization.\n `;
+        }
       
-      if (preserveStructure) {
-        promptText += `Please add ${commentLevel} level comments to the code WITHOUT changing its structure or functionality. `;
-      } else {
-        promptText += `Please optimize this code and add ${commentLevel} level comments. You can improve variable names, code structure and organization. `;
+        if (commentLevel === 'none') {
+          promptText += "Includes no comments.\n";
+        } else if (commentLevel === 'minimal') {
+          promptText += "Add only essential, brief comments for the most important parts.\n";
+        } else if (commentLevel === 'detailed') {
+          promptText += "Add comprehensive documentation including function purpose, parameters, return values, and explain complex logic in detail.\n";
+        } else {
+          promptText += "Add standard comments that explain what the code does at a function level and for any non-obvious logic.\n";
+        }
+
+        promptText += "In code comments, do not reference the original code\n\n";
       }
-      
-      if (commentLevel === 'minimal') {
-        promptText += "Add only essential, brief comments for the most important parts.";
-      } else if (commentLevel === 'detailed') {
-        promptText += "Add comprehensive documentation including function purpose, parameters, return values, and explain complex logic in detail.";
-      } else {
-        promptText += "Add standard comments that explain what the code does at a function level and for any non-obvious logic.";
+      else {
+        promptText += "Generate the requested Python code\n\
+        Respect specified constraints (performance, resource usage)\n\n";
+        
+        if (preserveStructure) {
+          promptText += "Optimize this code WITHOUT changing its structure or functionality. \n";
+        } else {
+          promptText += `Please optimize this code. You can improve variable names, code structure and organization.\n `;
+        }
+        
+        
+        if (commentLevel === 'none') {
+          promptText += "Includes no comments.\n";
+        } else if (commentLevel === 'minimal') {
+          promptText += "Add only essential, brief comments for the most important parts.\n";
+        } else if (commentLevel === 'detailed') {
+          promptText += "Add comprehensive documentation including function purpose, parameters, return values, and explain complex logic in detail.\n";
+        } else {
+          promptText += "Add standard comments that explain what the code does at a function level and for any non-obvious logic.\n";
+        }
+
+        promptText += "Structure the code according to best practices\n\
+                      Respond only with the code, without additional text\n\n";
       }
+
       
-      promptText += "\n\nRespond ONLY with the improved code in a code block. No explanations outside the code block.";
       
       // Call the Anthropic API
       const result = await callAnthropicAPI(promptText);
@@ -153,6 +218,7 @@ const App = () => {
       setIsProcessing(false);
     }
   };
+
 
   const copyToClipboard = () => {
     if (!processedCode) {
@@ -215,11 +281,16 @@ const App = () => {
               <label>Paste your code here</label>
               {detectedLanguage && <span className="language-tag">{detectedLanguage}</span>}
             </div>
-            <textarea
+            <CodeEditor
               value={code}
-              onChange={(e) => setCode(e.target.value)}
+              language="python"
               placeholder="Paste your code here..."
-              disabled={isProcessing}
+              onChange={(e) => setCode(e.target.value)}
+              padding={15}
+              style={{
+                backgroundColor: darkMode ? '#1E1E1E' : '#f5f5f5',
+                fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+              }}
             />
           </div>
 
@@ -261,8 +332,44 @@ const App = () => {
           <div className="settings-panel">
             <h3>Settings</h3>
             <div className="setting-group">
+              <label>Mode</label>
+              <div className="radio-group">
+                <label>
+                  <input
+                    type="radio"
+                    name="promptType"
+                    value="Code"
+                    checked={promptType === 'Code'}
+                    onChange={() => setpromptType('Code')}
+                  />
+                  Code
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="promptType"
+                    value="Text"
+                    checked={promptType === 'Text'}
+                    onChange={() => setpromptType('Text')}
+                  />
+                  Text
+                </label>
+                
+              </div>
+            </div>
+            <div className="setting-group">
               <label>Comment Detail Level</label>
               <div className="radio-group">
+              <label>
+                  <input
+                    type="radio"
+                    name="commentLevel"
+                    value="none"
+                    checked={commentLevel === 'none'}
+                    onChange={() => setCommentLevel('none')}
+                  />
+                  None
+                </label>
                 <label>
                   <input
                     type="radio"
@@ -304,7 +411,35 @@ const App = () => {
                 />
                 Preserve original structure (comments only)
               </label>
+
+              <label>
+                <input
+                  type="checkbox"
+                  checked={codeDebug}
+                  onChange={() => setcodeDebug(!codeDebug)}
+                />
+                Code Debugging
+              </label>
+
+              <label>
+                <input
+                  type="checkbox"
+                  checked={codeOptmize}
+                  onChange={() => setcodeOptmize(!codeOptmize)}
+                />
+                Code Optimization
+              </label>
+
+              <label>
+                <input
+                  type="checkbox"
+                  checked={codeExplanation}
+                  onChange={() => setcodeExplanation(!codeExplanation)}
+                />
+                Code Explanation
+              </label>
             </div>
+            
             <div className="api-key-section">
               <label>Anthropic API Key</label>
               <input 
@@ -318,6 +453,7 @@ const App = () => {
                 Your API key is stored locally and never sent to our servers
               </p>
             </div>
+            <img src={clippy} alt="clippy !" />
           </div>
         )}
       </main>
