@@ -25,6 +25,7 @@ app.use(express.json());
 app.post('/api/anthropic', async (req, res) => {
   try {
     const { apiKey = process.env.ANTHROPIC_API_KEY, prompt, model = 'claude-3-5-sonnet-20240620', maxTokens = 4000 } = req.body;
+    console.log('ok', req.body);
 
     if (!apiKey) {
       return res.status(400).json({ error: 'API key is required' });
