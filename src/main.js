@@ -9,7 +9,7 @@ app.whenReady().then(() => {
     webPreferences: {
       nodeIntegration: false, // Meilleure sécurité
       contextIsolation: true,
-    },
+    }
   });
 
   // Charge l'application React en mode développement
@@ -18,4 +18,6 @@ app.whenReady().then(() => {
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
+
+  mainWindow.setMenu(null);
 });
