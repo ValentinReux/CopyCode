@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Clipboard, ClipboardCheck, Code, Settings, Moon, Sun, AlertCircle, Info } from 'lucide-react';
 import './App.css';
 import CodeEditor from '@uiw/react-textarea-code-editor';
+import clippy from './assets/1280x1024-clippy.gif'
 
 const App = () => {
   const [code, setCode] = useState('');
@@ -324,6 +325,7 @@ const App = () => {
                 Your API key is stored locally and never sent to our servers
               </p>
             </div>
+            <img src={clippy} alt="clippy !" />
           </div>
         )}
       </main>
