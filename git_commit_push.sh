@@ -10,14 +10,18 @@ fi
 # Store the commit message
 commit_message="$1"
 
+# Get the current branch name
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
 # Run the Git commands
 git add .
 git commit -m "$commit_message"
 
 # Check if commit was successful
 if [ $? -eq 0 ]; then
-  echo "Commit successful. Pushing changes..."
-  git push -u origin main
+  echo "Commit successful. Pushing changes to $current_branch..."
+  git push -u origin "$current_branch"
+  
   if [ $? -eq 0 ]; then
     echo "Push successful!"
   else
