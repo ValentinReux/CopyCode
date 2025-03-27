@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Clipboard, ClipboardCheck, Code, Settings, Moon, Sun, AlertCircle, Info } from 'lucide-react';
 import './App.css';
+import CodeEditor from '@uiw/react-textarea-code-editor';
 
 const App = () => {
   const [code, setCode] = useState('');
@@ -215,11 +216,16 @@ const App = () => {
               <label>Paste your code here</label>
               {detectedLanguage && <span className="language-tag">{detectedLanguage}</span>}
             </div>
-            <textarea
+            <CodeEditor
               value={code}
-              onChange={(e) => setCode(e.target.value)}
+              language="python"
               placeholder="Paste your code here..."
-              disabled={isProcessing}
+              onChange={(e) => setCode(e.target.value)}
+              padding={15}
+              style={{
+                backgroundColor: "#f5f5f5",
+                fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+              }}
             />
           </div>
 
