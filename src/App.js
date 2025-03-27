@@ -288,7 +288,7 @@ const App = () => {
               onChange={(e) => setCode(e.target.value)}
               padding={15}
               style={{
-                backgroundColor: "#f5f5f5",
+                backgroundColor: darkMode ? '#1E1E1E' : '#f5f5f5',
                 fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
               }}
             />

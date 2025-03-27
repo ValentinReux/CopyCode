@@ -255,6 +255,10 @@ button:disabled {
   font-weight: 500;
 }
 
+.setting-group > label > input {
+  margin-right: 10px;
+}
+
 .radio-group {
   display: flex;
   gap: 1.5rem;
