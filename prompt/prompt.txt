@@ -5,7 +5,7 @@ According to the request:
  
 1. If the request concerns Python code generation:
     Generate the requested Python code
-    Respect specified constraints (performance, resource usage)
+    Make efficient code
     Include <no> comments <explanatory and detailed in the code> <short and concise>
     Structure the code according to best practices
     Respond only with the code, without additional text
