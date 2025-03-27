@@ -1,38 +1,369 @@
-.App {
-  text-align: center;
+/* App.css */
+:root {
+  --primary-color: #6366f1;
+  --primary-light: #818cf8;
+  --secondary-color: #f0f4f8;
+  --text-color: #1f2937;
+  --text-light: #6b7280;
+  --background-color: #ffffff;
+  --border-color: #e5e7eb;
+  --hover-color: #f9fafb;
+  --success-color: #10b981;
+  --error-color: #ef4444;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --radius: 8px;
+  --transition: all 0.2s ease;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.dark {
+  --primary-color: #818cf8;
+  --primary-light: #a5b4fc;
+  --secondary-color: #1f2937;
+  --text-color: #f3f4f6;
+  --text-light: #9ca3af;
+  --background-color: #111827;
+  --border-color: #374151;
+  --hover-color: #1f2937;
+  --success-color: #34d399;
+  --error-color: #f87171;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.App-header {
-  background-color: #282c34;
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: var(--transition);
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-color);
+}
+
+h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--text-light);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.icon-button:hover {
+  background-color: var(--hover-color);
+  color: var(--text-color);
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.code-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.input-area, .output-area {
+  width: 100%;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  background-color: var(--secondary-color);
+  transition: var(--transition);
+}
+
+.textarea-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: var(--hover-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.textarea-header label {
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.language-tag, .copied-tag {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  background-color: var(--primary-color);
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.copied-tag {
+  background-color: var(--success-color);
 }
 
-@keyframes App-logo-spin {
+textarea {
+  width: 100%;
+  min-height: 250px;
+  padding: 1rem;
+  font-family: monospace;
+  font-size: 0.9rem;
+  border: none;
+  resize: vertical;
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+}
+
+textarea:focus {
+  outline: none;
+}
+
+.button-container {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.process-button, .copy-button, .reset-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius);
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.process-button {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.process-button:hover {
+  background-color: var(--primary-light);
+}
+
+.copy-button {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+}
+
+.copy-button:hover {
+  background-color: var(--hover-color);
+}
+
+.reset-button {
+  background-color: transparent;
+  color: var(--text-light);
+  border: 1px solid var(--border-color);
+}
+
+.reset-button:hover {
+  background-color: var(--hover-color);
+  color: var(--text-color);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.processed-code {
+  padding: 1rem;
+  overflow-x: auto;
+  white-space: pre;
+  font-family: monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.settings-panel {
+  margin-top: 2rem;
+  width: 100%;
+  max-width: 600px;
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  background-color: var(--secondary-color);
+}
+
+.settings-panel h3 {
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.setting-group {
+  margin-bottom: 1.5rem;
+}
+
+.setting-group > label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.radio-group {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+input[type="radio"], input[type="checkbox"] {
+  accent-color: var(--primary-color);
+}
+
+.api-key-section {
+  margin-top: 1rem;
+}
+
+.api-key-section label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.api-key-section input {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.api-note {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-light);
+}
+
+.notification {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: var(--shadow);
+  animation: slideIn 0.3s ease-out;
+  z-index: 1000;
+}
+
+.notification.success {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.notification.error {
+  background-color: var(--error-color);
+  color: white;
+}
+
+@keyframes slideIn {
   from {
-    transform: rotate(0deg);
+    transform: translateY(100%);
+    opacity: 0;
   }
   to {
-    transform: rotate(360deg);
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+footer {
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-light);
+  border-top: 1px solid var(--border-color);
+}
+
+footer a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  header, main {
+    padding: 1rem;
+  }
+  
+  .button-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .radio-group {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 }
